@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+		<title>Edmonton Urban Coyote Project</title>
+		<link href="/css/style.css" rel="stylesheet" type="text/css"/>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+	</head>
+	<body background="imgs/form-cover.jpg">
+		<div class="contact-in">
+			<div id="map" class="contact-map"></div>
+			<div class="contact-form">
+				<h1>Report a Sighting</h1>
+				<form method="post" autocomplete="off" id="google-sheet" name="google-sheet">
+					<input type="text" name="Name" placeholder="Name" class="contact-form-txt" required=""/>
+					<input type="number" name="Contact" placeholder="Contact Number" class="contact-form-txt" required=""/>
+                    <input type="date" name="Date" placeholder="Date" class="contact-form-txt" required=""/>
+                    <select name="Time" id="time" class="dropdown" required="">
+						<option value="" disabled selected>Select time</option>
+						<option value="12:00AM - 5:00AM">12:00AM - 5:00AM</option>
+						<option value="5:30AM">5:30AM</option>
+                        <option value="6:00AM">6:00AM</option>
+                        <option value="6:30AM">6:30AM</option>
+						<option value="7:00AM">7:00AM</option>
+                        <option value="7:30AM">7:30AM</option>
+                        <option value="8:00AM">8:00AM</option>
+                        <option value="8:30AM">8:30AM</option>
+                        <option value="9:00AM">9:00AM</option>
+                        <option value="9:30AM">9:30AM</option>
+						<option value="10:00AM">10:00AM</option>
+                        <option value="10:30AM">10:30AM</option>
+                        <option value="11:00AM">11:00AM</option>
+                        <option value="11:30AM">11:30AM</option>
+						<option value="12:00PM">12:00PM</option>
+                        <option value="12:30PM">12:30PM</option>
+						<option value="1:00PM">1:00PM</option>
+                        <option value="1:30PM">1:30PM</option>
+						<option value="2:00PM">2:00PM</option>
+                        <option value="2:30PM">2:30PM</option>
+						<option value="3:00PM">3:00PM</option>
+                        <option value="3:30PM">3:30PM</option>
+						<option value="4:00PM">4:00PM</option>
+						<option value="4:30PM">4:30PM</option>
+						<option value="5:00PM">5:00PM</option>
+                        <option value="5:30PM">5:30PM</option>
+						<option value="6:00PM">6:00PM</option>
+                        <option value="6:30PM">6:30PM</option>
+						<option value="7:00PM - 12:00AM">7:00PM - 12:00AM</option>
+                    </select>
+                    <input type="text" name="Intersection" placeholder="Nearest Intersection" class="contact-form-txt" />
+
+					<div class="sighting-encounter">
+						<label for="text">Is this a: </label>
+						<input type="radio" id="sighting" name="type" class="sighting-encounter-radio"/>
+						<label for="text">Sighting</label>
+						<input type="radio" id="encounter" name="type" class="sighting-encounter-radio"/>
+						<label for="text">Encounter</label>
+						<h5 class="invisible">Type: </h5>
+						<input type="text" id="type" name="Type" class="invisible"></input>
+					</div>
+
+					<textarea name="Comments" placeholder="Observations / Comments / Concerns" class="contact-form-textarea"></textarea>
+					
+					<div class="lat-long-cover">
+					<h5 class="lat-long">Latitude: </h5>
+					<input type="text" id="info-lat" name="Latitude" class="lat-long" placeholder="53.546"></input>
+					<h5 class="lat-long">Longitude: </h5>
+					<input type="text" id="info-long" name="Longitude" class="lat-long" placeholder="-113.494"></input>
+					</div>
+					<input type="submit" name="submit" class="contact-form-btn" value="Submit" ata-modal-target="#modal"/>
+					<h5 class="image-upload" id="upload">
+						<a href="https://docs.google.com/forms/d/e/1FAIpQLSdP8JTP6Tc01y-bsF_rdpMns7-2yUb7iuKuI5LXCSjY7XYThw/viewform?usp=sf_link" target="_blank">You can upload your images here!</a>
+					</h5>
+				</form>
+			</div>
+		</div>
+
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCVBzMdgjz1XlEDDgIWgW0GDKm-9mSupYU&callback=initMap&libraries=&v=weekly"async></script>
+		<script type="text/javascript">
+			function initMap() {
+				// Map options
+				var options = {
+					zoom:10,
+					center:{lat:53.5461, lng:-113.4938}
+				}
+				// New icon
+				var icon = {
+					url: "../imgs/marker.png", // url
+					scaledSize: new google.maps.Size(50, 50), // scaled size
+					origin: new google.maps.Point(0,0), // origin
+					anchor: new google.maps.Point(25, 50) // anchor
+				};
+				// New map
+				var map = new google.maps.Map(document.getElementById('map'), options);
+				// Add marker
+				var marker = new google.maps.Marker({
+					position:{lat:53.5461, lng:-113.4938},
+					icon:icon,
+					optimized: false,
+					draggable: true,
+					map:map
+				})
+				marker.addListener('dragend', (googleMapsEvent) => {
+					var lat = googleMapsEvent.latLng.lat();
+					var lng = googleMapsEvent.latLng.lng();
+					document.getElementById('info-lat').value = (Math.round((lat + Number.EPSILON) * 10000) / 10000);
+					document.getElementById('info-long').value = (Math.round((lng + Number.EPSILON) * 10000) / 10000);
+				})
+				function changeMarkerPosition(marker) {
+    			var latlng = new google.maps.LatLng(53.5461, -113.4938);
+    			marker.setPosition(latlng);
+				}
+				form.addEventListener('submit', e => {
+					changeMarkerPosition(marker)
+				})
+			}
+
+			const scriptURL = 'https://script.google.com/macros/s/AKfycby1EVl5D-2BMo4SzvKdLavIOgQ3KvzTWg-C7cbl8uUg_fHAj6MigQzZjWp0rvS5qW3j/exec'
+			const form = document.forms['google-sheet'];
+				
+			form.addEventListener('submit', e => {
+    		e.preventDefault()
+			var rd1 = document.getElementById('sighting');
+			var rd2 = document.getElementById('encounter');
+
+			if (rd1.checked == true) {
+				document.getElementById('type').value = "Sighting";
+			}
+			else {
+				document.getElementById('type').value = "Encounter";
+			}
+
+    		fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+      		.then(response => console.log('Success!', response))
+      		.catch(error => console.error('Error!', error.message))
+			document.getElementById("google-sheet").reset();
+			document.getElementById('upload').style.display = "block";
+  			})
+		</script>
+	</body>
+</html>
